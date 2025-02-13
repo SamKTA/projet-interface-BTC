@@ -101,7 +101,7 @@ if st.button("Simuler l'investissement"):
         col1, col2, col3, col4 = st.columns(4)
         
         # Montant total investi
-        montant_total = montant_investi[-1]
+        montant_total = montant_investi.iloc[-1] if isinstance(montant_investi, pd.Series) else montant_investi[-1]
         with col1:
             st.metric(
                 label="Montant total investi",
@@ -109,7 +109,7 @@ if st.button("Simuler l'investissement"):
             )
         
         # Valeur finale du portefeuille
-        valeur_finale = valeur_portefeuille[-1]
+        valeur_finale = valeur_portefeuille.iloc[-1] if isinstance(valeur_portefeuille, pd.Series) else valeur_portefeuille[-1]
         with col2:
             st.metric(
                 label="Valeur finale du portefeuille",

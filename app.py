@@ -18,12 +18,17 @@ st.title("Simulateur d'investissement en crypto")
 # Fonctions utiles
 def get_crypto_price_history(crypto_id, days):
     """Récupère l'historique des prix d'une crypto via l'API CoinGecko"""
+    # Pour la version pro, décommentez ces lignes et ajoutez votre clé
+    # api_key = st.secrets["COINGECKO_API_KEY"]
+    # headers = {"X-Cg-Pro-Api-Key": api_key}
+    
     url = f"https://api.coingecko.com/api/v3/coins/{crypto_id}/market_chart"
     params = {
         "vs_currency": "eur",
         "days": days,
         "interval": "daily"
     }
+    # Pour la version pro, ajoutez headers=headers dans la requête
     response = requests.get(url, params=params)
     if response.status_code == 200:
         data = response.json()
@@ -59,13 +64,13 @@ if st.button("Simuler l'investissement"):
     
     if df_prices is not None:
         # Création des données de simulation
-        dates = pd.date_range(start=datetime.now(), periods=days, freq='D')
-        montant_investi = np.arange(days) // 30 * epargne_mensuelle
+        dates = pd.date_range(start=datetime.now(), periods=len(df_prices), freq='D')
+        montant_investi = np.arange(len(df_prices)) // 30 * epargne_mensuelle
         
         # Simulation de la valeur du portefeuille
-        prix_initial = df_prices['price'].iloc[-1]
+        prix_initial = df_prices['price'].iloc[0]  # Prix au début de la période
         variation_prix = df_prices['price'] / prix_initial
-        valeur_portefeuille = montant_investi * variation_prix.values
+        valeur_portefeuille = montant_investi * variation_prix
 
         # Création du graphique
         fig = make_subplots(specs=[[{"secondary_y": True}]])
